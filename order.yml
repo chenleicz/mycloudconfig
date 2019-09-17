@@ -1,0 +1,59 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+  port: 9021
+  context-path: /aos-server-loan/
+security:
+  user:
+    name: admin
+    password: admin
+  basic:
+    enabled: true
+spring:
+  application:
+    name: aos-server-loan
+  profiles:
+    active: dev
+  http:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+jasypt:
+  encryptor:
+    password: WP3lcc0V6ZnMO65XXofcYA==
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:  #如果达到retry效果，ribbon的超时时间应该小于hystrix的超时时间至少1/2
+  ConnectTimeout: 3000
+  ReadTimeout: 60000 
+logging:
+  level:
+     com.code.dao : debug
+management:
+  security:
+    enabled: false
+  context-path: /actuator
+endpoints:
+  health:
+    sensitive: false
+    show-details: ALWAYS
+eureka:
+  instance:
+     metadata-map:
+      management:
+       context-path: ${server.context-path}/actuator
+     health-check-url: http://localhost:${server.port}${server.context-path}/actuator/health
+     status-page-url: http://localhost:${server.port}${server.context-path}/actuator/info
+     home-page-url: http://localhost:${server.port}${server.context-path}/
+     
